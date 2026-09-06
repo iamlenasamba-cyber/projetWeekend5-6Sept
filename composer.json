@@ -2,7 +2,15 @@
     "name": "lena-samba/projet-weekend5-6septembre",
     "autoload": {
         "psr-4": {
-            "LenaSamba\\ProjetWeekend56septembre\\": "src/"
+            "App\\": "src/",
+            "App\\Controller\\": "src/Controller/",
+            "App\\DTO\\": "src/DTO/",
+            "App\\Exception\\": "src/Exception/",
+            "App\\Model\\": "src/Model/",
+            "App\\Repository\\": "src/Repository/",
+            "App\\Service\\": "src/Service/",
+            "App\\Validation\\": "src/Validation/",
+            "App\\View\\": "src/View/"
         }
     },
     "authors": [
