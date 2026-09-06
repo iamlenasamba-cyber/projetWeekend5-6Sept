@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+if ($argc < 2 || $argv[1] !== 'execute') {
+    die("Usage : php lena execute\n");
+}
+
+$fichierSql = __DIR__ . '/database/schema.sql';
+
+if (!file_exists($fichierSql)) {
+    die("Erreur : Le fichier '$fichierSql' est introuvable.\n");
+}
+
+$host = 'localhost';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+
+    $sql = file_get_contents($fichierSql);
+
+    if (empty(trim($sql))) {
+        die("Erreur : Le fichier '$fichierSql' est vide.\n");
+    }
+
+    $pdo->exec($sql);
+
+    echo "Succès : Base de données réinitialisée !\n";
+
+} catch (PDOException $e) {
+    echo "Erreur d'exécution : " . $e->getMessage() . "\n";
+}

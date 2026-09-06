@@ -1,0 +1,21 @@
+{
+    "name": "lena-samba/projet-weekend5-6septembre",
+    "autoload": {
+        "psr-4": {
+            "LenaSamba\\ProjetWeekend56septembre\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "iamlenasamba-cyber",
+            "email": "iamlenasamba@gmail.com"
+        }
+    ],
+    "require": {
+         "nikic/fast-route": "^1.3",
+        "respect/validation": "^2.4",
+        "illuminate/database": "^12.0",
+        "php-di/php-di": "^7.0",
+        "vlucas/phpdotenv": "^5.7"
+    }
+}
