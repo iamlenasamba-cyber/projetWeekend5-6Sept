@@ -10,9 +10,10 @@ class Salle extends Model
 
     protected $fillable = [
         'nom',
+        'batiment',
         'capacite',
+        'type_id',
         'active',
-        'type_salle_id',
     ];
 
     protected $casts = [

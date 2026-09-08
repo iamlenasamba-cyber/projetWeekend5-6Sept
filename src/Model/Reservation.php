@@ -10,7 +10,9 @@ class Reservation extends Model
 
     protected $fillable = [
         'salle_id',
-        'client_nom',
+        'responsable',
+        'email',
+        'motif',
         'date_debut',
         'date_fin',
     ];
