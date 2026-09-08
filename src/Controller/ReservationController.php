@@ -7,6 +7,7 @@ use App\Repository\ReservationRepository;
 use App\Repository\SalleRepository;
 use App\Service\CreateReservationService;
 use App\Service\ReservationService;
+use App\Service\AnnulerReservationService;
 use App\Exception\ReservationNotFoundException;
 
 final class ReservationController
@@ -48,6 +49,18 @@ final class ReservationController
             $error = $exception->getMessage();
             $salles = (new SalleRepository())->getAll();
             require_once dirname(__DIR__,2) . '/templates/reservation/create.php';
+        }
+    }
+
+    public function cancel(int $id): void
+    {
+        try {
+            (new AnnulerReservationService(new ReservationRepository()))->execute($id);
+            header('Location: /reservations');
+            exit;
+        } catch (ReservationNotFoundException $exception) {
+            http_response_code(404);
+            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
         }
     }
 } 

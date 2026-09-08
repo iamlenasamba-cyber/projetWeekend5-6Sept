@@ -35,6 +35,48 @@ final class SalleController
         }
     }
 
+    public function edit(int $id): void
+    {
+        try {
+            $salle = (new SalleService(new SalleRepository()))->findById($id);
+            require_once dirname(__DIR__, 2) . '/templates/salle/create.php';
+        } catch (SalleNotFoundException $exception) {
+            http_response_code(404);
+            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
+        }
+    }
+
+    public function update(int $id): void
+    {
+        try {
+            $dto = new CreateSalleDTO(
+                nom: $_POST['nom'] ?? '',
+                batiment: $_POST['batiment'] ?? '',
+                capacite: $_POST['capacite'] ?? 0,
+                typeId: $_POST['type_id'] ?? 0,
+                active: isset($_POST['active']) ? (bool) $_POST['active'] : true,
+            );
+            $repository = new SalleRepository();
+            $salle = (new SalleService($repository))->findById($id);
+            $salle->fill([
+                'nom' => $dto->nom,
+                'batiment' => $dto->batiment,
+                'capacite' => $dto->capacite,
+                'type_id' => $dto->typeId,
+                'active' => $dto->active,
+            ]);
+            $repository->save($salle);
+            header('Location: /salles/' . $id);
+            exit;
+        } catch (\InvalidArgumentException $exception) {
+            $error = $exception->getMessage();
+            require_once dirname(__DIR__, 2) . '/templates/salle/create.php';
+        } catch (SalleNotFoundException $exception) {
+            http_response_code(404);
+            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
+        }
+    }
+
     public function store(): void
     {
         try {

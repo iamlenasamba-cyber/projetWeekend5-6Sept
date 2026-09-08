@@ -6,7 +6,7 @@ ob_start();
 <?php if (!empty($error)): ?><p class="error"><?= $error ?></p><?php endif; ?>
 <form method="POST" action="/salles/store">
     <label for="nom">Nom</label>
-    <input id="nom" name="nom" value="<?= $old['nom'] ?>" required>
+    <input id="nom" name="nom" value="<?= $old['nom'] ?? '' ?>" required>
     <label for="batiment">Bâtiment</label>
     <input id="batiment" name="batiment" value="<?= $old['batiment'] ?? '' ?>" required>
     <label for="capacite">Capacité</label>
