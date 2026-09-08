@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reservation_app
+    volumes:
+      - .:/var/www/html
+    networks:
+      - reservation_net
+
+  webserver:
+    image: nginx:alpine
+    container_name: reservation_nginx
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - reservation_net
+
+  db:
+    image: mysql:8.0
+    container_name: reservation_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: mon_projet_weekend
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - reservation_net
+
+networks:
+  reservation_net:
+    driver: bridge
+
+volumes:
+  db_data:
