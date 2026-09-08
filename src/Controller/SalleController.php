@@ -5,15 +5,21 @@ namespace App\Controller;
 use App\DTO\CreateSalleDTO;
 use App\Exception\SalleNotFoundException;
 use App\Repository\SalleRepository;
+use App\Repository\SalleRepositoryInterface;
 use App\Model\Salle;
 use App\Service\SalleService;
 
 final class SalleController
 {
+    public function __construct(
+        private readonly SalleService $salleService,
+        private readonly SalleRepositoryInterface $salleRepository,
+    ) {
+    }
+
     public function index(): void
     {
-        $service = new SalleService(new SalleRepository());
-        $salles = $service->getAll();
+        $salles = $this->salleService->getAll();
 
         require_once dirname(__DIR__,2) . '/templates/salle/index.php';
     }
@@ -26,7 +32,7 @@ final class SalleController
     public function show(int $id): void
     {
         try {
-            $salle = (new SalleService(new SalleRepository()))->findById($id);
+            $salle = $this->salleService->findById($id);
             require_once dirname(__DIR__, 2) . '/templates/salle/show.php';
             
         } catch (SalleNotFoundException $exception) {
@@ -38,7 +44,7 @@ final class SalleController
     public function edit(int $id): void
     {
         try {
-            $salle = (new SalleService(new SalleRepository()))->findById($id);
+            $salle = $this->salleService->findById($id);
             require_once dirname(__DIR__, 2) . '/templates/salle/create.php';
         } catch (SalleNotFoundException $exception) {
             http_response_code(404);
@@ -56,8 +62,7 @@ final class SalleController
                 typeId: $_POST['type_id'] ?? 0,
                 active: isset($_POST['active']) ? (bool) $_POST['active'] : true,
             );
-            $repository = new SalleRepository();
-            $salle = (new SalleService($repository))->findById($id);
+            $salle = $this->salleService->findById($id);
             $salle->fill([
                 'nom' => $dto->nom,
                 'batiment' => $dto->batiment,
@@ -65,7 +70,7 @@ final class SalleController
                 'type_id' => $dto->typeId,
                 'active' => $dto->active,
             ]);
-            $repository->save($salle);
+            $this->salleRepository->save($salle);
             header('Location: /salles/' . $id);
             exit;
         } catch (\InvalidArgumentException $exception) {
@@ -88,14 +93,13 @@ final class SalleController
                 active: isset($_POST['active']) ? (bool) $_POST['active'] : true,
             );
 
-            $repository = new SalleRepository();
             $salle = new Salle();
             $salle->nom = $dto->nom;
             $salle->batiment = $dto->batiment;
             $salle->capacite = $dto->capacite;
             $salle->type_id = $dto->typeId;
             $salle->active = $dto->active;
-            $repository->save($salle);
+            $this->salleRepository->save($salle);
 
             header('Location: /salles');
             exit;

@@ -16,5 +16,5 @@ interface ReservationRepositoryInterface
 
     public function delete(Reservation $reservation): bool;
 
-    public function findConflits(int $salleId, DateTimeInterface $dateDebut, DateTimeInterface $dateFin): Collection;
+    public function findConflicts(int $salleId, DateTimeInterface $dateDebut, DateTimeInterface $dateFin): Collection;
 }

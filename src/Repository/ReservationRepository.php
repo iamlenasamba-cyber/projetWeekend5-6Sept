@@ -33,7 +33,7 @@ final class ReservationRepository implements ReservationRepositoryInterface
         return $reservation->delete();
     }
 
-    public function findConflits(int $salleId, DateTimeInterface $dateDebut, DateTimeInterface $dateFin): Collection
+    public function findConflicts(int $salleId, DateTimeInterface $dateDebut, DateTimeInterface $dateFin): Collection
     {
         $start = $dateDebut->format('Y-m-d H:i:s');
         $end = $dateFin->format('Y-m-d H:i:s');
