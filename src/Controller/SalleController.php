@@ -8,12 +8,14 @@ use App\Repository\SalleRepository;
 use App\Repository\SalleRepositoryInterface;
 use App\Model\Salle;
 use App\Service\SalleService;
+use App\Validation\SalleValidator;
 
 final class SalleController
 {
     public function __construct(
         private readonly SalleService $salleService,
         private readonly SalleRepositoryInterface $salleRepository,
+        private readonly SalleValidator $salleValidator,
     ) {
     }
 
@@ -55,13 +57,9 @@ final class SalleController
     public function update(int $id): void
     {
         try {
-            $dto = new CreateSalleDTO(
-                nom: $_POST['nom'] ?? '',
-                batiment: $_POST['batiment'] ?? '',
-                capacite: $_POST['capacite'] ?? 0,
-                typeId: $_POST['type_id'] ?? 0,
-                active: isset($_POST['active']) ? (bool) $_POST['active'] : true,
-            );
+            $data = $_POST;
+            $data['type_id'] = $this->salleRepository->findTypeIdByName((string) ($data['type'] ?? '')) ?? 0;
+            $dto = CreateSalleDTO::fromArray($data, $this->salleValidator);
             $salle = $this->salleService->findById($id);
             $salle->fill([
                 'nom' => $dto->nom,
@@ -85,13 +83,9 @@ final class SalleController
     public function store(): void
     {
         try {
-            $dto = new CreateSalleDTO(
-                nom:  $_POST['nom'],
-                batiment: $_POST['batiment'] ,
-                capacite: $_POST['capacite'] ,
-                typeId:  $_POST['type_id'] ,
-                active: isset($_POST['active']) ? (bool) $_POST['active'] : true,
-            );
+            $data = $_POST;
+            $data['type_id'] = $this->salleRepository->findTypeIdByName((string) ($data['type'] ?? '')) ?? 0;
+            $dto = CreateSalleDTO::fromArray($data, $this->salleValidator);
 
             $salle = new Salle();
             $salle->nom = $dto->nom;

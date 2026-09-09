@@ -6,13 +6,13 @@ ob_start();
 <?php if (!empty($error)): ?><p class="error"><?= $error ?></p><?php endif; ?>
 <form method="POST" action="/salles/store">
     <label for="nom">Nom</label>
-    <input id="nom" name="nom" value="<?= $old['nom'] ?? '' ?>" required>
+    <input id="nom" name="nom" value="<?= $old['nom'] ?? '' ?>" >
     <label for="batiment">Bâtiment</label>
-    <input id="batiment" name="batiment" value="<?= $old['batiment'] ?? '' ?>" required>
+    <input id="batiment" name="batiment" value="<?= $old['batiment'] ?? '' ?>" >
     <label for="capacite">Capacité</label>
-    <input id="capacite" name="capacite" type="number" min="1" value="<?= $old['capacite'] ?? '' ?>" required>
-    <label for="type_id">Type</label>
-    <input id="type_id" name="type_id" type="number" min="1" value="<?= $old['type_id'] ?? '' ?>" required>
+    <input id="capacite" name="capacite" type="number"  value="<?= $old['capacite'] ?? '' ?>" >
+    <label for="type">Type</label>
+    <input id="type" name="type" type="text" value="<?= $old['type'] ?? '' ?>"  >
     <label for="active">Active</label>
     <select id="active" name="active"><option value="1">Oui</option><option value="0">Non</option></select>
     <button type="submit">Enregistrer</button>

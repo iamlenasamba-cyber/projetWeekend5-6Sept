@@ -7,7 +7,6 @@ use App\Exception\SalleNotFoundException;
 use App\Model\Reservation;
 use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepositoryInterface;
-use DateTimeImmutable;
 
 final class CreateReservationService
 {
@@ -40,8 +39,8 @@ final class CreateReservationService
         $reservation->responsable = $dto->responsable;
         $reservation->email = $dto->email;
         $reservation->motif = $dto->motif;
-        $reservation->date_debut = new DateTimeImmutable($dto->dateDebut->format('Y-m-d'));
-        $reservation->date_fin = new DateTimeImmutable($dto->dateFin->format('Y-m-d'));
+        $reservation->date_debut = $dto->dateDebut;
+        $reservation->date_fin = $dto->dateFin;
 
         return $this->reservationRepository->save($reservation);
     }

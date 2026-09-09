@@ -11,6 +11,7 @@ use App\Service\CreateReservationService;
 use App\Service\ReservationService;
 use App\Service\AnnulerReservationService;
 use App\Exception\ReservationNotFoundException;
+use App\Validation\ReservationValidator;
 
 final class ReservationController
 {
@@ -20,6 +21,7 @@ final class ReservationController
         private readonly AnnulerReservationService $annulerReservationService,
         private readonly SalleRepositoryInterface $salleRepository,
         private readonly ReservationRepositoryInterface $reservationRepository,
+        private readonly ReservationValidator $reservationValidator,
     ) {
     }
 
@@ -50,7 +52,7 @@ final class ReservationController
     public function store(): void
     {
         try {
-            $dto = CreateReservationDTO::fromArray($_POST);
+            $dto = CreateReservationDTO::fromArray($_POST, $this->reservationValidator);
             $this->createReservationService->execute($dto);
             header('Location: /reservations');
             exit;

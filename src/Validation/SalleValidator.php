@@ -44,7 +44,29 @@ final class SalleValidator implements ValidatorInterface
                 $rule->check($data[$field]);
                 $acceptedData[$field] = $data[$field];
             } catch (ValidationException $exception) {
-                $errors[$field] = [$exception->getMessage()];
+                $fieldName = match ($field) {
+                    'nom' => 'nom',
+                    'batiment' => 'bâtiment',
+                    'capacite' => 'capacité',
+                    'type_id' => 'type',
+                    'active' => 'activité',
+                    default => $field,
+                };
+
+                $message = $exception->getMessage();
+                if (str_contains($message, 'must be positive')) {
+                    $errors[$field] = ["Veuillez saisir un type valide."];
+                } elseif (str_contains($message, 'must be greater than')) {
+                    $errors[$field] = ["La capacité doit être supérieure à 0."];
+                } elseif (str_contains($message, 'must be a string')) {
+                    $errors[$field] = ["Le champ {$fieldName} doit être une chaîne de caractères."];
+                } elseif (str_contains($message, 'must have a length')) {
+                    $errors[$field] = ["Le champ {$fieldName} doit contenir entre 2 et 100 caractères."];
+                } elseif (str_contains($message, 'must be a valid date')) {
+                    $errors[$field] = ["Le champ {$fieldName} doit être une date valide."];
+                } else {
+                    $errors[$field] = ["Le champ {$fieldName} n’est pas valide."];
+                }
             }
         }
 

@@ -11,6 +11,8 @@ interface SalleRepositoryInterface
 
     public function findById(int $id): ?Salle;
 
+    public function findTypeIdByName(string $name): ?int;
+
     public function save(Salle $salle): Salle;
 
     public function delete(Salle $salle): bool;

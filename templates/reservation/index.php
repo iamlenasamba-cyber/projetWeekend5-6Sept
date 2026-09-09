@@ -4,11 +4,10 @@ ob_start();
 <h1>Liste des réservations</h1>
 <a class="btn" href="/reservations/create">Nouvelle réservation</a>
 <table>
-    <thead><tr><th>ID</th><th>Salle</th><th>Responsable</th><th>Email</th><th>Début</th><th>Fin</th><th></th></tr></thead>
+    <thead><tr><th>Salle</th><th>Responsable</th><th>Email</th><th>Début</th><th>Fin</th><th></th></tr></thead>
     <tbody>
     <?php foreach ($reservations as $reservation): ?>
         <tr>
-            <td><?= $reservation->id ?></td>
             <td><?= $reservation->salle->nom ?? 'Inconnue' ?></td>
             <td><?= $reservation->responsable ?></td>
             <td><?= $reservation->email ?></td>

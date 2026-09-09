@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use App\Validation\ValidatorInterface;
 
 final readonly class CreateReservationDTO
 {
@@ -12,32 +13,42 @@ final readonly class CreateReservationDTO
         public string $motif,
         public \DateTimeImmutable $dateDebut,
         public \DateTimeImmutable $dateFin,
+        private ?ValidatorInterface $validator = null,
     ) {
-        $validator = new \App\Validation\ReservationValidator();
-        $result = $validator->validate([
-            'salle_id' => $salleId,
-            'responsable' => $responsable,
-            'email' => $email,
-            'motif' => $motif,
-            'date_debut' => $dateDebut->format('Y-m-d H:i:s'),
-            'date_fin' => $dateFin->format('Y-m-d H:i:s'),
-        ]);
+        if ($validator !== null) {
+            $result = $validator->validate([
+                'salle_id' => $salleId,
+                'responsable' => $responsable,
+                'email' => $email,
+                'motif' => $motif,
+                'date_debut' => $dateDebut->format('Y-m-d H:i:s'),
+                'date_fin' => $dateFin->format('Y-m-d H:i:s'),
+            ]);
 
-        if (! $result->isValid()) {
-            throw new \InvalidArgumentException($result->errors());
+            if (!$result->isValid()) {
+                $messages = array_map(
+                    static fn (array $errors): string => implode(' ', $errors),
+                    $result->errors(),
+                );
+
+                throw new \InvalidArgumentException(implode(' ', $messages));
+            }
         }
     }
 
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data, ?ValidatorInterface $validator = null): self
     {
+        $dateDebut = new \DateTimeImmutable($data['date_debut']);
+        $dateFin = new \DateTimeImmutable($data['date_fin']);
+
         return new self(
-            salleId:$data['salle_id'] ,
-            responsable: $data['responsable'] ,
-            email:  $data['email'] ,
-            motif: $data['motif'] ,
-            dateDebut: $data['date_debut'] ,
-            dateFin: $data['date_fin'] ,
+            salleId: (int) $data['salle_id'],
+            responsable: $data['responsable'],
+            email: $data['email'],
+            motif: $data['motif'],
+            dateDebut: $dateDebut,
+            dateFin: $dateFin,
+            validator: $validator,
         );
     }
-
 }
