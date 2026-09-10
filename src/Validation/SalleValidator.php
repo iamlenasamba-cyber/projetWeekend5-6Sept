@@ -21,12 +21,25 @@ final class SalleValidator implements ValidatorInterface
             'batiment' => RespectValidator::stringType()->notEmpty()->length(2, 100),
             'capacite' => RespectValidator::intType()->between(1, 1000),
             'type_id' => RespectValidator::intType()->positive()->callback(
-                static fn (int $typeId): bool => Capsule::table('types_salle')
-                    ->where('id', $typeId)
-                    ->exists()
+                static fn (int $typeId): bool => self::typeExists($typeId)
             ),
             'active' => RespectValidator::boolType(),
         ]);
+    }
+
+    private static function typeExists(int $typeId): bool
+    {
+        try {
+            if (!Capsule::connection()) {
+                return false;
+            }
+
+            return Capsule::table('types_salle')
+                ->where('id', $typeId)
+                ->exists();
+        } catch (\Throwable $exception) {
+            return false;
+        }
     }
 
     private function validateFields(array $data, array $rules): ValidationResult

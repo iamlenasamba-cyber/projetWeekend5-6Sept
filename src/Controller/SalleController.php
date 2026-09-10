@@ -4,11 +4,11 @@ namespace App\Controller;
 
 use App\DTO\CreateSalleDTO;
 use App\Exception\SalleNotFoundException;
-use App\Repository\SalleRepository;
 use App\Repository\SalleRepositoryInterface;
 use App\Model\Salle;
 use App\Service\SalleService;
 use App\Validation\SalleValidator;
+use App\View\ViewRenderer;
 
 final class SalleController
 {
@@ -16,6 +16,7 @@ final class SalleController
         private readonly SalleService $salleService,
         private readonly SalleRepositoryInterface $salleRepository,
         private readonly SalleValidator $salleValidator,
+        private readonly ViewRenderer $viewRenderer,
     ) {
     }
 
@@ -23,23 +24,27 @@ final class SalleController
     {
         $salles = $this->salleService->getAll();
 
-        require_once dirname(__DIR__,2) . '/templates/salle/index.php';
+        echo $this->viewRenderer->render('salle/index.php', [
+            'salles' => $salles,
+        ]);
     }
 
     public function create(): void
     {
-        require_once dirname(__DIR__, 2) . '/templates/salle/create.php';
+        echo $this->viewRenderer->render('salle/create.php');
     }
 
     public function show(int $id): void
     {
         try {
             $salle = $this->salleService->findById($id);
-            require_once dirname(__DIR__, 2) . '/templates/salle/show.php';
-            
+
+            echo $this->viewRenderer->render('salle/show.php', [
+                'salle' => $salle,
+            ]);
         } catch (SalleNotFoundException $exception) {
             http_response_code(404);
-            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
+            echo $this->viewRenderer->render('error/404.php');
         }
     }
 
@@ -47,10 +52,13 @@ final class SalleController
     {
         try {
             $salle = $this->salleService->findById($id);
-            require_once dirname(__DIR__, 2) . '/templates/salle/create.php';
+
+            echo $this->viewRenderer->render('salle/create.php', [
+                'salle' => $salle,
+            ]);
         } catch (SalleNotFoundException $exception) {
             http_response_code(404);
-            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
+            echo $this->viewRenderer->render('error/404.php');
         }
     }
 
@@ -73,10 +81,12 @@ final class SalleController
             exit;
         } catch (\InvalidArgumentException $exception) {
             $error = $exception->getMessage();
-            require_once dirname(__DIR__, 2) . '/templates/salle/create.php';
+            echo $this->viewRenderer->render('salle/create.php', [
+                'error' => $error,
+            ]);
         } catch (SalleNotFoundException $exception) {
             http_response_code(404);
-            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
+            echo $this->viewRenderer->render('error/404.php');
         }
     }
 
@@ -99,10 +109,12 @@ final class SalleController
             exit;
         } catch (\InvalidArgumentException $exception) {
             $error = $exception->getMessage();
-            require_once dirname(__DIR__,2) . '/templates/salle/create.php';
+            echo $this->viewRenderer->render('salle/create.php', [
+                'error' => $error,
+            ]);
         } catch (SalleNotFoundException $exception) {
             http_response_code(404);
-            echo $exception->getMessage();
+            echo $this->viewRenderer->render('error/404.php');
         }
     }
 }

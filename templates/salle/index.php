@@ -11,7 +11,7 @@ ob_start();
             <td><?= $salle->nom ?></td>
             <td><?= $salle->batiment ?></td>
             <td><?= $salle->capacite ?></td>
-            <td><?= $salle->type_nom ?? $salle->type_id ?></td>
+            <td><?= $salle->type_nom ?></td>
             <td><?= $salle->active ? 'Oui' : 'Non' ?></td>
             <td><a href="/salles/<?= $salle->id ?>">Voir</a></td>
         </tr>

@@ -3,8 +3,6 @@
 namespace App\Controller;
 
 use App\DTO\CreateReservationDTO;
-use App\Repository\ReservationRepository;
-use App\Repository\SalleRepository;
 use App\Repository\SalleRepositoryInterface;
 use App\Repository\ReservationRepositoryInterface;
 use App\Service\CreateReservationService;
@@ -12,6 +10,7 @@ use App\Service\ReservationService;
 use App\Service\AnnulerReservationService;
 use App\Exception\ReservationNotFoundException;
 use App\Validation\ReservationValidator;
+use App\View\ViewRenderer;
 
 final class ReservationController
 {
@@ -22,6 +21,7 @@ final class ReservationController
         private readonly SalleRepositoryInterface $salleRepository,
         private readonly ReservationRepositoryInterface $reservationRepository,
         private readonly ReservationValidator $reservationValidator,
+        private readonly ViewRenderer $viewRenderer,
     ) {
     }
 
@@ -29,23 +29,31 @@ final class ReservationController
     {
         $reservations = $this->reservationService->getAll();
 
-        require_once dirname(__DIR__,2) . '/templates/reservation/index.php';
+        echo $this->viewRenderer->render('reservation/index.php', [
+            'reservations' => $reservations,
+        ]);
     }
 
     public function create(): void
     {
         $salles = $this->salleRepository->getAll();
-        require_once dirname(__DIR__,2) . '/templates/reservation/create.php';
+
+        echo $this->viewRenderer->render('reservation/create.php', [
+            'salles' => $salles,
+        ]);
     }
 
     public function show(int $id): void
     {
         try {
             $reservation = $this->reservationService->findById($id);
-            require_once dirname(__DIR__,2) . '/templates/reservation/show.php';
+
+            echo $this->viewRenderer->render('reservation/show.php', [
+                'reservation' => $reservation,
+            ]);
         } catch (ReservationNotFoundException $exception) {
             http_response_code(404);
-            require_once dirname(__DIR__,2) . '/templates/error/404.php';
+            echo $this->viewRenderer->render('error/404.php');
         }
     }
 
@@ -59,7 +67,11 @@ final class ReservationController
         } catch (\InvalidArgumentException | \RuntimeException $exception) {
             $error = $exception->getMessage();
             $salles = $this->salleRepository->getAll();
-            require_once dirname(__DIR__,2) . '/templates/reservation/create.php';
+
+            echo $this->viewRenderer->render('reservation/create.php', [
+                'error' => $error,
+                'salles' => $salles,
+            ]);
         }
     }
 
@@ -71,7 +83,7 @@ final class ReservationController
             exit;
         } catch (ReservationNotFoundException $exception) {
             http_response_code(404);
-            require_once dirname(__DIR__, 2) . '/templates/error/404.php';
+            echo $this->viewRenderer->render('error/404.php');
         }
     }
 } 

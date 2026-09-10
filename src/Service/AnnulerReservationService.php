@@ -10,8 +10,7 @@ final class AnnulerReservationService
 {
     public function __construct(
         private readonly ReservationRepositoryInterface $reservationRepository,
-    ) {
-    }
+    ) {}
 
     public function execute(int $reservationId): bool
     {

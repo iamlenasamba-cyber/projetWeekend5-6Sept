@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\DTO\CreateReservationDTO;
-use App\Exception\SalleNotFoundException;
 use App\Model\Reservation;
 use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepositoryInterface;
@@ -13,6 +12,7 @@ final class CreateReservationService
     public function __construct(
         private readonly SalleRepositoryInterface $salleRepository,
         private readonly ReservationRepositoryInterface $reservationRepository,
+        private readonly ReservationCreationContraintes $ReservationCreationContraintes,
     ) {
     }
 
@@ -20,19 +20,11 @@ final class CreateReservationService
     {
         $salle = $this->salleRepository->findById($dto->salleId);
 
-        if ($salle === null) {
-            throw new SalleNotFoundException();
-        }
-
-        $conflits = $this->reservationRepository->findConflicts(
-            $dto->salleId,
-            $dto->dateDebut,
-            $dto->dateFin,
+        $this->ReservationCreationContraintes->verifier(
+            $salle,
+            $dto,
+            $this->reservationRepository,
         );
-
-        if ($conflits->isNotEmpty()) {
-            throw new \RuntimeException('La salle est déjà réservée sur cette période.');
-        }
 
         $reservation = new Reservation();
         $reservation->salle_id = $dto->salleId;

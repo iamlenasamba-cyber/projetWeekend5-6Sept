@@ -4,8 +4,10 @@ use App\Repository\ReservationRepository;
 use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepository;
 use App\Repository\SalleRepositoryInterface;
+use App\Service\ReservationCreationContraintes;
 use App\Validation\ReservationValidator;
 use App\Validation\SalleValidator;
+use App\View\ViewRenderer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use DI\ContainerBuilder;
 
@@ -15,6 +17,8 @@ $builder->addDefinitions([
 	ReservationRepositoryInterface::class => DI\autowire(ReservationRepository::class),
 	SalleValidator::class => DI\autowire(SalleValidator::class),
 	ReservationValidator::class => DI\autowire(ReservationValidator::class),
+	ReservationCreationContraintes::class => DI\autowire(ReservationCreationContraintes::class),
+	ViewRenderer::class => DI\autowire(ViewRenderer::class),
 	CapsuleManager::class => DI\factory(static function (): CapsuleManager {
 		return require dirname(__DIR__) . '/config/database.php';
 	}),
