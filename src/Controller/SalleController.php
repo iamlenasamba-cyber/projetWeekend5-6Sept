@@ -66,7 +66,8 @@ final class SalleController
     {
         try {
             $data = $_POST;
-            $data['type_id'] = $this->salleRepository->findTypeIdByName((string) ($data['type'] ?? '')) ?? 0;
+            $typeId = $this->salleRepository->findTypeIdByName((string) ($data['type'] ?? ''));
+            $data['type_id'] = $typeId ?? 0;
             $dto = CreateSalleDTO::fromArray($data, $this->salleValidator);
             $salle = $this->salleService->findById($id);
             $salle->fill([
@@ -94,7 +95,8 @@ final class SalleController
     {
         try {
             $data = $_POST;
-            $data['type_id'] = $this->salleRepository->findTypeIdByName((string) ($data['type'] ?? '')) ?? 0;
+            $typeId = $this->salleRepository->findTypeIdByName((string) ($data['type'] ?? ''));
+            $data['type_id'] = $typeId ?? 0;
             $dto = CreateSalleDTO::fromArray($data, $this->salleValidator);
 
             $salle = new Salle();

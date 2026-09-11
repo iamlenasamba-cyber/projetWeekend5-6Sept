@@ -12,7 +12,12 @@ ob_start();
     <label for="capacite">Capacité</label>
     <input id="capacite" name="capacite" type="number"  value="<?= $old['capacite'] ?? '' ?>" >
     <label for="type">Type</label>
-    <input id="type" name="type" type="text" value="<?= $old['type'] ?? '' ?>"  >
+    <select id="type" name="type">
+        <option value=""> Choisir un type </option>
+        <?php foreach (['cours', 'informatique', 'laboratoire', 'amphitheatre', 'reunion'] as $type): ?>
+            <option value="<?= $type ?>" <?= (($old['type'] ?? '') === $type) ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
+        <?php endforeach; ?>
+    </select>
     <label for="active">Active</label>
     <select id="active" name="active"><option value="1">Oui</option><option value="0">Non</option></select>
     <button type="submit">Enregistrer</button>

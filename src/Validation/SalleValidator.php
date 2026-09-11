@@ -66,20 +66,11 @@ final class SalleValidator implements ValidatorInterface
                     default => $field,
                 };
 
-                $message = $exception->getMessage();
-                if (str_contains($message, 'must be positive')) {
-                    $errors[$field] = ["Veuillez saisir un type valide."];
-                } elseif (str_contains($message, 'must be greater than')) {
-                    $errors[$field] = ["La capacité doit être supérieure à 0."];
-                } elseif (str_contains($message, 'must be a string')) {
-                    $errors[$field] = ["Le champ {$fieldName} doit être une chaîne de caractères."];
-                } elseif (str_contains($message, 'must have a length')) {
-                    $errors[$field] = ["Le champ {$fieldName} doit contenir entre 2 et 100 caractères."];
-                } elseif (str_contains($message, 'must be a valid date')) {
-                    $errors[$field] = ["Le champ {$fieldName} doit être une date valide."];
-                } else {
-                    $errors[$field] = ["Le champ {$fieldName} n’est pas valide."];
-                }
+                $errors[$field] = match ($field) {
+                    'type_id' => ['Veuillez sélectionner un type valide.'],
+                    'capacite' => ['La capacité doit être comprise entre 1 et 1000.'],
+                    default => ["Le champ {$fieldName} n'est pas valide."],
+                };
             }
         }
 
