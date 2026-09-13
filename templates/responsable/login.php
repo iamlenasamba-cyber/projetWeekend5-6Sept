@@ -22,6 +22,7 @@ $old = $_POST ?? [];
 
     <button type="submit">Se connecter</button>
 </form>
+<div>Se connecter avec Lena Samba - lena.samba@example.com</div>
 
 </body>
 </html>
