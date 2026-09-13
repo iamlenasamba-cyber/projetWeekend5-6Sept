@@ -4,10 +4,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: reservation_app
+    command: php -S 0.0.0.0:8080 -t public
+    ports:
+      - "8000:8080"
     volumes:
       - .:/var/www/html
     networks:
       - reservation_net
+    depends_on:
+      - db
 
   db:
     image: mysql:8.0

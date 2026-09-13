@@ -2,7 +2,6 @@
 
 
 $dispatcher = require_once dirname(__DIR__) . '/routes/web.php';
-
 $httpMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);

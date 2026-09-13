@@ -17,6 +17,9 @@ $content = $content ?? '';
             <a href="/reservations">Réservations</a>
             <a href="/salles/create">Nouvelle salle</a>
             <a href="/reservations/create">Nouvelle réservation</a>
+            <form method="POST" action="/responsable/logout" style="display:inline;">
+                <button type="submit">Déconnexion</button>
+            </form>
         </nav>
     </header>
     <main>

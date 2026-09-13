@@ -1,11 +1,12 @@
 <?php
 
+use App\Controller\ResponsibleAuthController;
 use App\Controller\ReservationController;
 use App\Controller\SalleController;
 use FastRoute\RouteCollector;
 
 return FastRoute\simpleDispatcher(function (RouteCollector $router): void {
-	$router->addRoute('GET', '/', [SalleController::class, 'index']);
+	$router->addRoute('GET', '/', [ResponsibleAuthController::class, 'index']);
 	$router->addRoute('GET', '/salles', [SalleController::class, 'index']);
 	$router->addRoute('GET', '/salles/create', [SalleController::class, 'create']);
 	$router->addRoute('POST', '/salles', [SalleController::class, 'store']);
@@ -19,4 +20,7 @@ return FastRoute\simpleDispatcher(function (RouteCollector $router): void {
 	$router->addRoute('POST', '/reservations/store', [ReservationController::class, 'store']);
 	$router->addRoute('GET', '/reservations/{id:\d+}', [ReservationController::class, 'show']);
 	$router->addRoute('POST', '/reservations/{id:\d+}/cancel', [ReservationController::class, 'cancel']);
+	$router->addRoute('GET', '/responsable/login', [ResponsibleAuthController::class, 'index']);
+	$router->addRoute('POST', '/responsable/authenticate', [ResponsibleAuthController::class, 'authenticate']);
+	$router->addRoute('POST', '/responsable/logout', [ResponsibleAuthController::class, 'logout']);
 });
